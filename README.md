@@ -391,4 +391,320 @@ contract HelloWorld {
 ## Question 1
 Create a voting system with multiple candidates. Each address can vote only once.
 ## Code
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract VotingSystem {
+    struct Candidate {
+        string name;
+        uint voteCount;
+    }
+
+    address public owner;
+    mapping(address => bool) public hasVoted;
+    Candidate[] public candidates;
+
+    constructor(string[] memory candidateNames) {
+        owner = msg.sender;
+        for (uint i = 0; i < candidateNames.length; i++) {
+            candidates.push(Candidate(candidateNames[i], 0));
+        }
+    }
+
+    function vote(uint candidateIndex) public {
+        require(!hasVoted[msg.sender], "You have already voted.");
+        require(candidateIndex < candidates.length, "Invalid candidate index.");
+
+        hasVoted[msg.sender] = true;
+        candidates[candidateIndex].voteCount++;
+    }
+
+    function getCandidateCount() public view returns (uint) {
+        return candidates.length;
+    }
+
+    function getCandidate(uint index) public view returns (string memory, uint) {
+        require(index < candidates.length, "Invalid candidate index.");
+        Candidate memory c = candidates[index];
+        return (c.name, c.voteCount);
+    }
+}
+```
+## Deployment
+![image 21](https://github.com/user-attachments/assets/983ccc46-f84f-4c0a-9454-c04889a961e8)
+
+## Deployment Successful
+![image 23](https://github.com/user-attachments/assets/fef3cf17-81bf-481f-a728-6ca920683faa)
+
+## Interaction with contract
+![image 22](https://github.com/user-attachments/assets/3256cd53-860b-4c31-a872-a85bf9ce8b35)
+
+## Question 2
+Write a contract that manages a list of student records (name, roll number). Allow adding and retrieving student data.
+## Code
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract StudentRecords {
+    struct Student {
+        string name;
+        uint rollNumber;
+    }
+
+    Student[] public students;
+
+    // Add a new student
+    function addStudent(string memory _name, uint _rollNumber) public {
+        students.push(Student(_name, _rollNumber));
+    }
+
+    // Get student by index
+    function getStudent(uint index) public view returns (string memory, uint) {
+        require(index < students.length, "Student index out of bounds");
+        Student memory s = students[index];
+        return (s.name, s.rollNumber);
+    }
+
+    // Get total number of students
+    function getStudentCount() public view returns (uint) {
+        return students.length;
+    }
+}
+```
+## Deployment
+![image 26](https://github.com/user-attachments/assets/2124a47b-966c-4bdf-bd3c-2c6075e985f8)
+
+## Deployment Successful
+![image 24](https://github.com/user-attachments/assets/5c7cee11-a71b-42ea-847a-59fef96b028b)
+
+## Interaction with contract
+![image 25](https://github.com/user-attachments/assets/27552721-fc55-4102-8096-59db50839b13)
+
+## Question 3
+Develop a contract that only allows the deployer (owner) to call a specific function (use modifiers).
+## Code
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract OwnerOnlyFunction {
+    address public owner;
+
+    // Set the deployer as the owner
+    constructor() {
+        owner = msg.sender;
+    }
+
+    // Modifier to restrict access to the owner
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can call this function.");
+        _;
+    }
+
+    string private secretMessage;
+
+    // Function that only the owner can call
+    function setSecretMessage(string memory _message) public onlyOwner {
+        secretMessage = _message;
+    }
+
+    // Anyone can view the secret message
+    function getSecretMessage() public view returns (string memory) {
+        return secretMessage;
+    }
+}
+```
+## Deployment and successfuly deployed
+![image 26](https://github.com/user-attachments/assets/4b32a2ff-1f5d-40ae-9501-db9627a7614a)
+
+## interaction with the contract
+![image 27](https://github.com/user-attachments/assets/23baa3db-92a1-4e36-aaac-bbe61cdad42c)
+
+## Question 4
+Write a contract where people can donate Ether and the top 3 donors are tracked
+## code
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract TopDonors {
+    struct Donor {
+        address donorAddress;
+        uint amount;
+    }
+
+    Donor[3] public topDonors;
+
+    mapping(address => uint) public totalDonated;
+
+    // Accept donations and update top 3 donors
+    function donate() public payable {
+        require(msg.value > 0, "Donation must be greater than 0");
+
+        totalDonated[msg.sender] += msg.value;
+        updateTopDonors(msg.sender);
+    }
+
+    // Internal function to update top 3 donor list
+    function updateTopDonors(address donor) internal {
+        uint donatedAmount = totalDonated[donor];
+
+        // Check if the donor already exists in top 3
+        for (uint i = 0; i < 3; i++) {
+            if (topDonors[i].donorAddress == donor) {
+                topDonors[i].amount = donatedAmount;
+                sortTopDonors();
+                return;
+            }
+        }
+
+        // If not in top 3, check if this donor should be added
+        for (uint i = 0; i < 3; i++) {
+            if (donatedAmount > topDonors[i].amount) {
+                // Shift down lower donors
+                for (uint j = 2; j > i; j--) {
+                    topDonors[j] = topDonors[j - 1];
+                }
+                topDonors[i] = Donor(donor, donatedAmount);
+                return;
+            }
+        }
+    }
+
+    // Sort top donors in descending order
+    function sortTopDonors() internal {
+        for (uint i = 0; i < 2; i++) {
+            for (uint j = i + 1; j < 3; j++) {
+                if (topDonors[j].amount > topDonors[i].amount) {
+                    Donor memory temp = topDonors[i];
+                    topDonors[i] = topDonors[j];
+                    topDonors[j] = temp;
+                }
+            }
+        }
+    }
+
+    // Get all top donors
+    function getTopDonors() public view returns (address[3] memory, uint[3] memory) {
+        address[3] memory addresses;
+        uint[3] memory amounts;
+
+        for (uint i = 0; i < 3; i++) {
+            addresses[i] = topDonors[i].donorAddress;
+            amounts[i] = topDonors[i].amount;
+        }
+
+        return (addresses, amounts);
+    }
+}
+```
+
+## Deployment and successfuly deployed
+![image 28](https://github.com/user-attachments/assets/96efc383-8ee8-49d9-bb5e-4f92df0e1871)
+
+## interacting with the contract
+![image 29](https://github.com/user-attachments/assets/52bf4b8e-c47d-4213-b2ca-f218bc86c992)
+
+## Question 5
+Implement a simple auction system where users can place bids, and the highest bidder wins.
+## Code
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SimpleAuction {
+    address public owner;
+    address public highestBidder;
+    uint public highestBid;
+    bool public auctionEnded;
+
+    mapping(address => uint) public bids;
+
+    event NewHighestBid(address bidder, uint amount);
+    event AuctionEnded(address winner, uint amount);
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    // Place a bid (must be higher than current highest bid)
+    function bid() public payable {
+        require(!auctionEnded, "Auction already ended.");
+        require(msg.value > highestBid, "There already is a higher or equal bid.");
+
+        // Refund the previous highest bidder
+        if (highestBid > 0) {
+            bids[highestBidder] += highestBid;
+        }
+
+        highestBidder = msg.sender;
+        highestBid = msg.value;
+
+        emit NewHighestBid(msg.sender, msg.value);
+    }
+
+    // Withdraw overbid funds
+    function withdraw() public {
+        uint amount = bids[msg.sender];
+        require(amount > 0, "Nothing to withdraw.");
+        bids[msg.sender] = 0;
+        payable(msg.sender).transfer(amount);
+    }
+
+    // End the auction and send highest bid to the owner
+    function endAuction() public {
+        require(msg.sender == owner, "Only the owner can end the auction.");
+        require(!auctionEnded, "Auction already ended.");
+
+        auctionEnded = true;
+        emit AuctionEnded(highestBidder, highestBid);
+        payable(owner).transfer(highestBid);
+    }
+}
+```
+## Deployment and successfuly deployed
+![image 30](https://github.com/user-attachments/assets/fcbc9e2c-4c3a-4fd4-a722-7b8a099d4059)
+
+## interacting with the contract
+![image 31](https://github.com/user-attachments/assets/b07ea5d2-ee9f-486b-899f-8d9e91136a63)
+
+## Question 6
+Create a contract that splits incoming Ether between 3 fixed addresses.
+## Code
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract EtherSplitter {
+    address payable public recipient1;
+    address payable public recipient2;
+    address payable public recipient3;
+
+    constructor(address payable _r1, address payable _r2, address payable _r3) {
+        recipient1 = _r1;
+        recipient2 = _r2;
+        recipient3 = _r3;
+    }
+
+    // Function to receive Ether and split it
+    receive() external payable {
+        uint amount = msg.value / 3;
+
+        // Send 1/3 of the Ether to each recipient
+        recipient1.transfer(amount);
+        recipient2.transfer(amount);
+        recipient3.transfer(msg.value - 2 * amount); // handle rounding
+    }
+}
+```
+## Deployment and successfuly deployed
+![image 33](https://github.com/user-attachments/assets/c8775f74-876e-4ffa-a2ca-437c6209e186)
+## interacting with the contract
+![image 34](https://github.com/user-attachments/assets/ad671158-4849-417e-be83-708116f2ca00)
+
+   ## END OF THE ASSIGNMENT
+   ## SUBMITTED BY-SHUBHAM SINGH(24107059)
+   ## SUBJECT-INTRODUCTION TO BLOCKCHAIN(SEC)
 
