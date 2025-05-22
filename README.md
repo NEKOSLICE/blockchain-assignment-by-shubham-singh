@@ -25,6 +25,7 @@ Open the app — it will start the IPFS daemon and give you a friendly GUI to in
 
 ---
 ![image 1](https://github.com/user-attachments/assets/e6144e63-1389-4613-b87b-e3e4ceb2fd74)
+![IMAGE 1 1](https://github.com/user-attachments/assets/79c5513a-d3f0-45fd-aacd-071f823ae9b1)
 
 # File Upload
 
