@@ -1,4 +1,4 @@
-#Practical 1
+# Practical 1
 # IPFS DOWNLOAD STEP
 
 🔹 **Step 1**: Go to the official website  
