@@ -309,7 +309,6 @@ HelloWorld Solidity Smart Contract - Beginner Tutorial
 💻 SETTING UP THE ENVIRONMENT:
 
 1. Open the Remix IDE in your browser: https://remix.ethereum.org  
-   (No installation required — everything runs in the browser.)
 
 📁 CREATE A NEW CONTRACT FILE:
 
@@ -319,10 +318,6 @@ HelloWorld Solidity Smart Contract - Beginner Tutorial
    - Name your file: HelloWorld.sol
 
 🧾 WRITE YOUR SMART CONTRACT:
-
-3. You can either:
-   - Paste the code provided below, or
-   - Type it manually to better understand each line.
 
 🛠️ COMPILE THE CONTRACT:
 
@@ -345,8 +340,7 @@ HelloWorld Solidity Smart Contract - Beginner Tutorial
        - Click the **transact** button (only the owner can update it).
 
 📜 SMART CONTRACT CODE:
-*/
-
+```
 contract HelloWorld {
     string public greeting;
     address public owner;
@@ -363,6 +357,8 @@ contract HelloWorld {
 }
 
 /*
+```
+
 🛠️ CUSTOMIZATION OPTIONS:
 - Set a different default greeting message in the constructor.
 - Rename the contract from `HelloWorld` to something relevant to your project.
