@@ -341,22 +341,24 @@ HelloWorld Solidity Smart Contract - Beginner Tutorial
 
 📜 SMART CONTRACT CODE:
 ```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
 contract HelloWorld {
-    string public greeting;
-    address public owner;
+    string public message;
 
     constructor() {
-        greeting = "Hello Web3 World!";
-        owner = msg.sender;
+        message = "Hello, World!";
     }
 
-    function updateGreeting(string memory newGreeting) public {
-        require(msg.sender == owner, "Only the contract owner can update the greeting.");
-        greeting = newGreeting;
+    function setMessage(string calldata newMessage) public {
+        message = newMessage;
+    }
+
+    function getMessage() public view returns (string memory) {
+        return message;
     }
 }
-
-/*
 ```
 
 🛠️ CUSTOMIZATION OPTIONS:
