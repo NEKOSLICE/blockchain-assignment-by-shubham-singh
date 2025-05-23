@@ -360,6 +360,7 @@ contract HelloWorld {
     }
 }
 ```
+![image 35](https://github.com/user-attachments/assets/a530fee2-e51a-4955-8390-0ce721060c1e)
 
 🛠️ CUSTOMIZATION OPTIONS:
 - Set a different default greeting message in the constructor.
