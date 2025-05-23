@@ -703,7 +703,7 @@ contract EtherSplitter {
 ## interacting with the contract
 ![image 34](https://github.com/user-attachments/assets/ad671158-4849-417e-be83-708116f2ca00)
 
-   ## END OF THE ASSIGNMENT
+   ## end of the repository.
    ## SUBMITTED BY-SHUBHAM SINGH(24107059)
    ## SUBJECT-INTRODUCTION TO BLOCKCHAIN(SEC)
 
