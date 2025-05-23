@@ -145,7 +145,7 @@ Sepolia Faucet transaction request page:
 2. Created a new wallet and backed up the Secret Recovery Phrase.
 3. Connected MetaMask to **Sepolia Testnet** (added custom network manually).
 4. Claimed **test ETH** from the faucet.
-5. Sent **0.03 ETH** to another wallet address using MetaMask.
+5. Sent **0.01 ETH** to another wallet address using MetaMask.
 6. Verified transaction success on Sepolia Etherscan.
 
 ---
